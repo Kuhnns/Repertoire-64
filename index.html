@@ -2,54 +2,73 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; connect-src 'self' https://api.chess.com; font-src 'self'; form-action 'self'; frame-src 'none'; img-src 'self' data:; manifest-src 'self'; media-src 'none'; object-src 'none'; script-src 'self'; style-src 'self'; worker-src 'none'; require-trusted-types-for 'script'; trusted-types 'none'; upgrade-insecure-requests">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="referrer" content="no-referrer">
     <meta name="google-site-verification" content="8gzjm3p1PhkxQzYyBTjbeXqrGrNx4Vt2TQRwgGrDx-Q">
-    <meta name="description" content="Learn 46 chess openings from move one and review your Chess.com repertoire.">
+    <meta name="description" content="Learn all 300 chess openings free from move one and review your Chess.com repertoire.">
     <meta name="theme-color" content="#214c3a">
     <title>Repertoire /64 — Chess Opening Coach</title>
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="./styles.css">
+    <link rel="stylesheet" href="./responsive-fixes.css">
   </head>
   <body>
     <header class="topbar">
       <a class="brand" href="#home"><span>R</span> Repertoire /64</a>
-      <nav><a href="#catalog">46 courses</a><a href="#trainer">Trainer</a><a href="#extension">Chrome extension</a></nav>
-      <a class="store-link js-store-link" href="#" target="_blank" rel="noreferrer">Chrome Web Store ↗</a>
+      <nav><a href="#catalog">300 free courses</a><a href="#trainer">Trainer</a><a href="#extension">Chrome extension</a><a href="https://discord.gg/RRT3jMGvCg" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">Support</a><a href="https://docs.google.com/forms/d/e/1FAIpQLSdIKH8JLNTk0vL2k8OIpFuJzBn8XvbKlanTcReGq10v-xXERg/viewform?usp=publish-editor" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">Apply to join support ↗</a></nav>
+      <a class="store-link js-store-link" href="#" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">Chrome Web Store ↗</a>
     </header>
 
     <main id="home">
       <section class="hero">
         <p class="eyebrow">BEGINNER-FIRST OPENING SCHOOL · STATIC GITHUB PAGES EDITION</p>
         <h1>Stop memorizing moves.<br><em>Understand the position.</em></h1>
-        <p class="hero-copy">Forty-six opening courses, a realistic move trainer, public Chess.com rating lookup, and progress saved directly on this computer—no server or account required.</p>
+        <p class="hero-copy">All 300 opening courses, a realistic move trainer, public Chess.com rating lookup, advanced explanations, and progress saved directly on this computer—completely free.</p>
         <form id="player-form" class="lookup">
-          <div><label for="username">CHESS.COM USERNAME</label><input id="username" autocomplete="off" placeholder="e.g. hikaru"></div>
+          <div><label for="username">CHESS.COM USERNAME</label><input id="username" autocomplete="off" autocapitalize="none" maxlength="25" minlength="2" pattern="[A-Za-z0-9_-]{2,25}" spellcheck="false" placeholder="e.g. hikaru"></div>
           <button type="submit">Analyze my Elo →</button>
         </form>
         <p id="player-status" class="status" aria-live="polite"></p>
         <div id="player-report" class="report" hidden></div>
-        <div class="hero-stats"><div><strong>23</strong><span>White courses</span></div><div><strong>23</strong><span>Black courses</span></div><div><strong>Local</strong><span>private progress</span></div></div>
+        <div class="hero-stats"><div><strong>150</strong><span>free White courses</span></div><div><strong>150</strong><span>free Black courses</span></div><div><strong>100%</strong><span>free advanced lessons</span></div></div>
       </section>
 
       <section id="catalog" class="section">
         <div class="section-heading"><div><p>THE FULL LIBRARY</p><h2>Choose a course for your repertoire.</h2></div><p>Every course starts from the normal initial position and includes a legal main line, move explanations, plans, mistakes, and three opponent alternatives.</p></div>
         <div class="catalog-tools">
           <div id="filters" class="filters"><button class="active" data-side="All">All</button><button data-side="White">White</button><button data-side="Black">Black</button></div>
-          <input id="search" type="search" placeholder="Search openings and ideas…" aria-label="Search opening courses">
+          <input id="search" type="search" maxlength="80" placeholder="Search openings and ideas…" aria-label="Search opening courses">
         </div>
         <div id="course-grid" class="course-grid"></div>
       </section>
 
       <section id="trainer" class="trainer-section">
-        <div class="trainer-title"><div><p>STARTING FROM ZERO</p><h2 id="course-name">Loading opening…</h2></div><span id="save-status">Saved on this computer</span></div>
+        <div class="trainer-title"><div><p>STARTING FROM ZERO</p><h2 id="course-name">Loading opening…</h2></div><span id="save-status" aria-live="polite">Saved on this computer</span></div>
         <div class="foundation">
           <article><small>THE IDEA</small><h3 id="course-idea"></h3><p id="course-why"></p></article>
           <article><small>PAWN STRUCTURE</small><h3 id="course-structure"></h3><p>Use the pawn structure to decide which files, diagonals, and breaks matter.</p></article>
           <article><small>YOUR PLAN</small><h3 id="course-plan"></h3><p>Answer the threat, check king safety, then improve your least-active piece.</p></article>
         </div>
+        <section class="advanced-strategy" aria-labelledby="advanced-heading">
+          <div>
+            <small>ADVANCED STRATEGY · INCLUDED FREE</small>
+            <h3 id="advanced-heading">The deeper plan</h3>
+            <p id="advanced-goal"></p>
+            <p id="advanced-plan"></p>
+          </div>
+          <div>
+            <strong>Move-order risk</strong>
+            <p id="advanced-risk"></p>
+            <strong>How to judge the position</strong>
+            <p id="advanced-evaluation"></p>
+          </div>
+          <ol id="advanced-checklist"></ol>
+        </section>
         <div class="trainer">
           <div class="board-wrap"><div id="board" class="board" aria-label="Interactive chess board"></div></div>
           <div class="lesson">
-            <div class="lesson-progress"><span id="progress-label">0 / 0</span><div><i id="progress-bar"></i></div></div>
+            <div class="lesson-progress"><span id="progress-label">0 / 0</span><progress id="progress-bar" max="100" value="0" aria-label="Current lesson progress"></progress></div>
             <p id="turn-label" class="turn-label">YOUR MOVE</p>
             <h3 id="lesson-title">Find the right move on the board.</h3>
             <p id="lesson-copy" class="lesson-copy">Select the piece, then its destination.</p>
@@ -59,27 +78,27 @@
             <div id="move-list" class="move-list"></div>
           </div>
         </div>
-        <div class="branches"><div class="branch-head"><div><p>WHEN THE OPPONENT CHANGES COURSE</p><h3>Specific replies to remember</h3></div><a id="video-link" target="_blank" rel="noreferrer">Reputable video lesson ↗</a></div><div id="branch-grid" class="branch-grid"></div></div>
+        <div class="branches"><div class="branch-head"><div><p>WHEN THE OPPONENT CHANGES COURSE</p><h3>Specific replies to remember</h3></div><a id="video-link" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">Reputable video lesson ↗</a></div><div id="branch-grid" class="branch-grid"></div></div>
       </section>
 
       <section id="extension" class="extension">
         <div>
           <p>CHROME COMPANION</p>
           <h2>Turn every finished Chess.com game into a lesson.</h2>
-          <p>The Chrome extension detects only a visible completed-game state, retrieves the published PGN, and runs Stockfish locally on your computer. It provides no live-game moves or overlays.</p>
-          <a class="add-chrome js-store-link" href="#" target="_blank" rel="noreferrer">Add to Chrome ↗</a>
+          <p>The Chrome extension detects only a visible completed-game state, retrieves the published PGN, and runs Stockfish locally on your computer. It visually replays every move, translates notation into plain English, and offers Quick, Balanced, or Deep review. It provides no live-game moves or overlays.</p>
+          <a class="add-chrome js-store-link" href="#" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">Add to Chrome ↗</a>
           <span id="store-note">Chrome Web Store link will activate after the listing is published.</span>
         </div>
         <aside><small>POST-GAME REVIEW</small><h3>Move 11 · Inaccuracy</h3><p>You released the center before finishing development.</p><div><span>YOU PLAYED</span><strong>11. dxe5?!</strong></div><div class="better"><span>BETTER</span><strong>11. O-O</strong></div></aside>
       </section>
 
-      <section class="privacy-strip">
-        <div><strong>Local-first privacy</strong><p>The static website saves course progress in your browser. The extension stores its username, preferences, completed game, and review results locally.</p></div>
-        <a href="./privacy.html">Read the privacy policy →</a>
+      <section id="privacy-controls" class="privacy-strip">
+        <div><strong>Local-first privacy</strong><p>The static website saves course progress in this browser. Your Chess.com username is used for the lookup but is not saved by this website.</p><p id="clear-progress-status" class="clear-status" aria-live="polite"></p></div>
+        <div class="privacy-actions"><button id="clear-progress" type="button">Clear local progress</button><a href="./privacy.html">Read the privacy policy →</a></div>
       </section>
     </main>
 
-    <footer><a class="brand" href="#home"><span>R</span> Repertoire /64</a><p>Opening education and completed-game review. Not for live-game assistance.</p><a href="./privacy.html">Privacy</a></footer>
+    <footer><a class="brand" href="#home"><span>R</span> Repertoire /64</a><p>Opening education and completed-game review. Not for live-game assistance.</p><nav class="footer-links"><a href="./privacy.html">Privacy</a><a href="https://discord.gg/RRT3jMGvCg" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">Discord support ↗</a><a href="https://docs.google.com/forms/d/e/1FAIpQLSdIKH8JLNTk0vL2k8OIpFuJzBn8XvbKlanTcReGq10v-xXERg/viewform?usp=publish-editor" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">Apply to join support ↗</a></nav></footer>
     <script src="./site-config.js"></script>
     <script type="module" src="./app.js"></script>
   </body>

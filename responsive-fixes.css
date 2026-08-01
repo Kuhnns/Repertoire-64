@@ -1,0 +1,15 @@
+.trainer,
+.board-wrap,
+.board,
+.lesson {
+  min-width: 0;
+}
+
+.board {
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+}
+
+.square {
+  min-width: 0;
+  padding: 0;
+}
