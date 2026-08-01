@@ -10,6 +10,7 @@ This static edition includes:
 
 - All 300 free opening courses: 150 for White and 150 for Black.
 - The interactive move trainer.
+- An official Lichess analysis link for every course's exact legal line, plus an optional reputable-channel video search.
 - Device-local course progress.
 - Direct read-only Chess.com PubAPI rating lookup.
 - The extension privacy policy.

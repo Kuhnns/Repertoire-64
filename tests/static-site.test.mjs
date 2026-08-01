@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import { learningResourceUrl } from "../learning-resource.js";
 
 const formId = "1FAIpQLSdIKH8JLNTk0vL2k8OIpFuJzBn8XvbKlanTcReGq10v-xXERg";
 const discordInvite = "https://discord.gg/RRT3jMGvCg";
@@ -24,6 +25,27 @@ test("catalog contains 150 White and 150 Black courses with unique IDs", () => {
   }
 });
 
+test("all courses expose an exact-line HTTPS resource on allowlisted Lichess", () => {
+  for (const course of openings) {
+    const resource = new URL(learningResourceUrl(course));
+    assert.equal(resource.protocol, "https:", `${course.id} resource must use HTTPS`);
+    assert.equal(resource.hostname, "lichess.org", `${course.id} resource host is not allowlisted`);
+    assert.equal(resource.username, "", `${course.id} resource must not contain credentials`);
+    assert.equal(resource.password, "", `${course.id} resource must not contain credentials`);
+    assert.equal(resource.port, "", `${course.id} resource must not use a custom port`);
+    assert.ok(resource.pathname.startsWith("/analysis/pgn/"), `${course.id} must open its exact line`);
+    assert.equal(resource.searchParams.get("color"), course.side.toLowerCase(), `${course.id} orientation is wrong`);
+    assert.equal(resource.hash, "#explorer", `${course.id} must open the opening explorer`);
+  }
+
+  for (const unsafeSan of ["javascript:alert(1)", "data:text/html,unsafe", "https://example.com", "../outside"]) {
+    const fallback = new URL(learningResourceUrl({ side: "White", mainline: [{ san: unsafeSan }] }));
+    assert.equal(fallback.protocol, "https:");
+    assert.equal(fallback.hostname, "lichess.org");
+    assert.equal(fallback.pathname, "/analysis");
+  }
+});
+
 test("home and privacy pages expose the official support channels safely", () => {
   for (const html of [index, privacy]) {
     assert.ok(html.includes(discordInvite));
@@ -34,6 +56,14 @@ test("home and privacy pages expose the official support channels safely", () =>
   }
   assert.match(privacy, /wallet seed phrases/i);
   assert.match(privacy, /request deletion/i);
+  assert.match(privacy, /selected bug-ticket channels or threads/i);
+  assert.match(privacy, /designated ⭐ reviews location/i);
+  assert.match(privacy, /treated as untrusted input/i);
+  assert.match(privacy, /private GitHub repository/i);
+  assert.match(privacy, /Negative sentiment[\s\S]*never causes a fix/i);
+  assert.match(privacy, /never merges, deploys, or publishes/i);
+  assert.match(privacy, /purging 30 days after closure/i);
+  assert.match(privacy, /cannot guarantee detection of every secret/i);
 });
 
 test("Google verification and the store allowlist remain configured", () => {
@@ -52,5 +82,7 @@ test("static pages load only packaged JavaScript", () => {
   }
   assert.match(index, /src="\.\/site-config\.js"/);
   assert.match(index, /src="\.\/app\.js"/);
+  assert.match(index, /SAFE EXTRA HELP · OFFICIAL LICHESS TOOL/);
+  assert.match(index, /id="learning-resource-link"/);
   assert.match(index, /href="\.\/responsive-fixes\.css"/);
 });
