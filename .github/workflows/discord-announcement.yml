@@ -1,0 +1,49 @@
+name: Post Discord announcement
+
+on:
+  workflow_dispatch:
+    inputs:
+      title:
+        description: Announcement title (maximum 120 characters)
+        required: true
+        type: string
+      message:
+        description: Announcement message (maximum 3,500 characters)
+        required: true
+        type: string
+      links:
+        description: "Optional links, one per line: Label | https://example.com"
+        required: false
+        default: ""
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: repertoire64-discord-announcements
+  cancel-in-progress: false
+
+jobs:
+  announce:
+    name: Validate and post announcement
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+
+      - name: Require a supported Node.js runtime
+        shell: bash
+        run: node -e "if (Number(process.versions.node.split('.')[0]) < 18) process.exit(1)"
+
+      - name: Validate and post to Discord
+        shell: bash
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          ANNOUNCEMENT_TITLE: ${{ inputs.title }}
+          ANNOUNCEMENT_MESSAGE: ${{ inputs.message }}
+          ANNOUNCEMENT_LINKS: ${{ inputs.links }}
+        run: node scripts/post-discord-announcement.mjs
