@@ -1,4 +1,5 @@
 import { Chess } from "./vendor/chess.js";
+import { learningResourceUrl } from "./learning-resource.js";
 
 const PIECES = {
   wp: "♙", wn: "♘", wb: "♗", wr: "♖", wq: "♕", wk: "♔",
@@ -11,6 +12,7 @@ const USERNAME_PATTERN = /^[a-z0-9_-]{2,25}$/i;
 const COURSE_ID_PATTERN = /^[a-z0-9-]{3,64}$/;
 const MAX_PROGRESS_ITEMS = 300;
 const MAX_COUNTER = 100000;
+const LICHESS_HOSTS = new Set(["lichess.org"]);
 const YOUTUBE_HOSTS = new Set(["youtube.com", "www.youtube.com", "m.youtube.com", "youtu.be", "www.youtube-nocookie.com"]);
 const CHROME_STORE_HOSTS = new Set(["chromewebstore.google.com", "chrome.google.com"]);
 
@@ -307,16 +309,30 @@ function chooseCourse(id, restore = true) {
   $("#course-plan").textContent = course.plan;
   renderAdvancedStrategy();
 
+  const resourceLink = $("#learning-resource-link");
+  const resourceUrl = safeHttpsUrl(learningResourceUrl(course), LICHESS_HOSTS);
+  if (resourceUrl) {
+    resourceLink.href = resourceUrl;
+    resourceLink.hidden = false;
+    resourceLink.textContent = `Explore ${course.name} on Lichess ↗`;
+    resourceLink.setAttribute("aria-label", `Explore the ${course.name} course line on Lichess in a new tab`);
+  } else {
+    resourceLink.removeAttribute("href");
+    resourceLink.hidden = true;
+    resourceLink.textContent = "Lichess analysis unavailable";
+    resourceLink.removeAttribute("aria-label");
+  }
+
   const videoLink = $("#video-link");
   const videoUrl = safeHttpsUrl(course.video?.url, YOUTUBE_HOSTS);
   if (videoUrl) {
     videoLink.href = videoUrl;
     videoLink.hidden = false;
-    videoLink.textContent = `${course.video.source || "YouTube"} video lesson ↗`;
+    videoLink.textContent = `${course.video.source || "YouTube"} video search ↗`;
   } else {
     videoLink.removeAttribute("href");
     videoLink.hidden = true;
-    videoLink.textContent = "Video lesson unavailable";
+    videoLink.textContent = "Video search unavailable";
   }
 
   renderTrainer(ply ? "Welcome back. Continue from your saved step." : "Start at the normal initial position. Select the piece, then its destination.");
