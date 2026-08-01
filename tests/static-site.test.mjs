@@ -34,6 +34,14 @@ test("home and privacy pages expose the official support channels safely", () =>
   }
   assert.match(privacy, /wallet seed phrases/i);
   assert.match(privacy, /request deletion/i);
+  assert.match(privacy, /selected bug-ticket channels or threads/i);
+  assert.match(privacy, /designated ⭐ reviews location/i);
+  assert.match(privacy, /treated as untrusted input/i);
+  assert.match(privacy, /private GitHub repository/i);
+  assert.match(privacy, /Negative sentiment[\s\S]*never causes a fix/i);
+  assert.match(privacy, /never merges, deploys, or publishes/i);
+  assert.match(privacy, /purging 30 days after closure/i);
+  assert.match(privacy, /cannot guarantee detection of every secret/i);
 });
 
 test("Google verification and the store allowlist remain configured", () => {
