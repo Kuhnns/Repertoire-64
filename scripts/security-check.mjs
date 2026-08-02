@@ -40,6 +40,8 @@ const webhookRules = [
   ["Slack", /https:\/\/hooks\.slack\.com\/services\/[A-Z0-9]{8,}\/[A-Z0-9]{8,}\/[A-Za-z0-9]{20,}/gi],
   ["Telegram", /https:\/\/api\.telegram\.org\/bot\d{8,}:[A-Za-z0-9_-]{20,}/gi],
   ["assigned webhook", /\b(?:webhook(?:_?url)?|hook_?url)\s*["']?\s*[:=]\s*["'`]https:\/\/[^\s"'`]{25,}/gi],
+  ["Plisio", /\bPLISIO_SECRET_KEY\s*=\s*(?!replace_me(?:\s|$))[^\s#]{16,}/gi],
+  ["Plisio public variable", /\bNEXT_PUBLIC_PLISIO_[A-Z0-9_]+\b/g],
 ];
 
 const findings = [];
@@ -160,7 +162,7 @@ async function main() {
       for (const match of source.matchAll(new RegExp(pattern.source, pattern.flags))) finding(file, source, match.index, "webhook-secret", `${provider} webhook credential appears committed; remove and rotate it`);
     }
   }
-  for (const file of ["index.html", "privacy.html"]) validateCsp(file, await readFile(join(root, file), "utf8"));
+  for (const file of ["index.html", "privacy.html", "terms.html"]) validateCsp(file, await readFile(join(root, file), "utf8"));
   await validateWorkflows(files);
 
   const unique = [...new Set(findings)].sort();

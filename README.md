@@ -8,16 +8,15 @@ After the Chrome Web Store listing is published, paste its URL into `site-config
 
 This static edition includes:
 
-- All 300 free opening courses: 150 for White and 150 for Black.
+- 150 Free opening courses: 75 for White and 75 for Black.
 - The interactive move trainer.
-- An official Lichess analysis link for every course's exact legal line, plus an optional reputable-channel video search.
 - Device-local course progress.
 - Direct read-only Chess.com PubAPI rating lookup.
 - The extension privacy policy.
 
 Optional ChatGPT account sync is available only on the hosted Repertoire /64 application because GitHub Pages cannot run the required server and database.
 
-Every course and advanced explanation is free. The hosted edition additionally supports optional account-based progress sync and deeper completed-game analysis.
+The static package physically contains only Free tutorial content. Its Premium links open the authenticated hosted checkout, where a one-time $10 USD-equivalent Plisio payment can unlock all 300 courses and the deeper explanation layer. GitHub Pages contains no API secret, payment callback, private receipt, or entitlement logic.
 
 ## Community
 

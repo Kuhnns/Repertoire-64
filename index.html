@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="referrer" content="no-referrer">
     <meta name="google-site-verification" content="8gzjm3p1PhkxQzYyBTjbeXqrGrNx4Vt2TQRwgGrDx-Q">
-    <meta name="description" content="Learn all 300 chess openings free from move one and review your Chess.com repertoire.">
+    <meta name="description" content="Learn 150 chess openings free from move one, then continue with 150 Premium courses on the authenticated website.">
     <meta name="theme-color" content="#214c3a">
     <title>Repertoire /64 — Chess Opening Coach</title>
     <link rel="icon" href="./favicon.svg" type="image/svg+xml">
@@ -16,7 +16,7 @@
   <body>
     <header class="topbar">
       <a class="brand" href="#home"><span>R</span> Repertoire /64</a>
-      <nav><a href="#catalog">300 free courses</a><a href="#trainer">Trainer</a><a href="#extension">Chrome extension</a><a href="https://discord.gg/RRT3jMGvCg" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">Support</a><a href="https://docs.google.com/forms/d/e/1FAIpQLSdIKH8JLNTk0vL2k8OIpFuJzBn8XvbKlanTcReGq10v-xXERg/viewform?usp=publish-editor" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">Apply to join support ↗</a></nav>
+      <nav><a href="#catalog">150 free courses</a><a href="#premium">Premium</a><a href="#trainer">Trainer</a><a href="#extension">Chrome extension</a><a href="https://discord.gg/RRT3jMGvCg" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">Support</a><a href="https://docs.google.com/forms/d/e/1FAIpQLSdIKH8JLNTk0vL2k8OIpFuJzBn8XvbKlanTcReGq10v-xXERg/viewform?usp=publish-editor" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">Apply to join support ↗</a></nav>
       <a class="store-link js-store-link" href="#" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">Chrome Web Store ↗</a>
     </header>
 
@@ -24,18 +24,26 @@
       <section class="hero">
         <p class="eyebrow">BEGINNER-FIRST OPENING SCHOOL · STATIC GITHUB PAGES EDITION</p>
         <h1>Stop memorizing moves.<br><em>Understand the position.</em></h1>
-        <p class="hero-copy">All 300 opening courses, a realistic move trainer, public Chess.com rating lookup, advanced explanations, and progress saved directly on this computer—completely free.</p>
+        <p class="hero-copy">This Free edition includes 150 opening courses, a realistic move trainer, public Chess.com rating lookup, and progress saved directly on this computer. Premium adds 150 courses and a much deeper explanation layer on the authenticated website.</p>
         <form id="player-form" class="lookup">
           <div><label for="username">CHESS.COM USERNAME</label><input id="username" autocomplete="off" autocapitalize="none" maxlength="25" minlength="2" pattern="[A-Za-z0-9_-]{2,25}" spellcheck="false" placeholder="e.g. hikaru"></div>
           <button type="submit">Analyze my Elo →</button>
         </form>
         <p id="player-status" class="status" aria-live="polite"></p>
         <div id="player-report" class="report" hidden></div>
-        <div class="hero-stats"><div><strong>150</strong><span>free White courses</span></div><div><strong>150</strong><span>free Black courses</span></div><div><strong>100%</strong><span>free advanced lessons</span></div></div>
+        <div class="hero-stats"><div><strong>75</strong><span>free White courses</span></div><div><strong>75</strong><span>free Black courses</span></div><div><strong>+150</strong><span>courses in Premium</span></div></div>
+      </section>
+
+      <section id="premium" class="premium-section">
+        <div><p>FREE VS PREMIUM</p><h2>Start with the essentials.<br><em>Unlock the complete school.</em></h2><p>GitHub Pages is the Free edition and physically contains only the 150 Free tutorials. Premium lessons are delivered only by the authenticated website.</p></div>
+        <div class="premium-cards">
+          <article><small>FREE</small><h3>150 courses</h3><p>Core plans, legal main lines, one opponent scenario, Stockfish 18 Lite reviews, and local progress.</p></article>
+          <article class="featured"><small>PREMIUM · $10 ONE TIME</small><h3>300 courses</h3><p>All openings, deeper explanations for every move, all reply scenarios, move-order risks, evaluation notes, and longer Elo analysis. Sign in with a working email before the secure Plisio checkout.</p><a href="https://repertoire-64.astral-kid-0584.chatgpt.site/premium/checkout" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">Continue to secure checkout ↗</a></article>
+        </div>
       </section>
 
       <section id="catalog" class="section">
-        <div class="section-heading"><div><p>THE FULL LIBRARY</p><h2>Choose a course for your repertoire.</h2></div><p>Every course starts from the normal initial position and includes a legal main line, move explanations, plans, mistakes, and three opponent alternatives.</p></div>
+        <div class="section-heading"><div><p>THE FREE LIBRARY</p><h2>Choose from 150 complete courses.</h2></div><p>Every Free course starts from the normal initial position and includes a legal main line, clear move explanations, a practical plan, a common error, and one opponent-response scenario.</p></div>
         <div class="catalog-tools">
           <div id="filters" class="filters"><button class="active" data-side="All">All</button><button data-side="White">White</button><button data-side="Black">Black</button></div>
           <input id="search" type="search" maxlength="80" placeholder="Search openings and ideas…" aria-label="Search opening courses">
@@ -50,21 +58,7 @@
           <article><small>PAWN STRUCTURE</small><h3 id="course-structure"></h3><p>Use the pawn structure to decide which files, diagonals, and breaks matter.</p></article>
           <article><small>YOUR PLAN</small><h3 id="course-plan"></h3><p>Answer the threat, check king safety, then improve your least-active piece.</p></article>
         </div>
-        <section class="advanced-strategy" aria-labelledby="advanced-heading">
-          <div>
-            <small>ADVANCED STRATEGY · INCLUDED FREE</small>
-            <h3 id="advanced-heading">The deeper plan</h3>
-            <p id="advanced-goal"></p>
-            <p id="advanced-plan"></p>
-          </div>
-          <div>
-            <strong>Move-order risk</strong>
-            <p id="advanced-risk"></p>
-            <strong>How to judge the position</strong>
-            <p id="advanced-evaluation"></p>
-          </div>
-          <ol id="advanced-checklist"></ol>
-        </section>
+        <aside class="advanced-teaser"><strong>Premium explanation layer</strong><span>Premium adds move-by-move deeper reasoning, move-order risks, evaluation notes, two more opponent scenarios, and a decision checklist.</span><a href="https://repertoire-64.astral-kid-0584.chatgpt.site/premium/checkout" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">Open secure checkout ↗</a></aside>
         <div class="trainer">
           <div class="board-wrap"><div id="board" class="board" aria-label="Interactive chess board"></div></div>
           <div class="lesson">
@@ -82,14 +76,14 @@
           <div><small>SAFE EXTRA HELP · OFFICIAL LICHESS TOOL</small><h3 id="learning-resource-heading">Step through this exact line on Lichess</h3><p>If an explanation is unclear, replay the same legal move sequence on Lichess's analysis board and compare common continuations. Use analysis only for study after games, never during live play.</p></div>
           <a id="learning-resource-link" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">Explore this course on Lichess ↗</a>
         </aside>
-        <div class="branches"><div class="branch-head"><div><p>WHEN THE OPPONENT CHANGES COURSE</p><h3>Specific replies to remember</h3></div><a id="video-link" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">Reputable-channel video search ↗</a></div><div id="branch-grid" class="branch-grid"></div></div>
+        <div class="branches"><div class="branch-head"><div><p>WHEN THE OPPONENT CHANGES COURSE</p><h3>One common reply to remember</h3></div><a id="video-link" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">Reputable-channel video search ↗</a></div><div id="branch-grid" class="branch-grid compact"></div></div>
       </section>
 
       <section id="extension" class="extension">
         <div>
           <p>CHROME COMPANION</p>
           <h2>Turn every finished Chess.com game into a lesson.</h2>
-          <p>The Chrome extension detects only a visible completed-game state, retrieves the published PGN, and runs Stockfish locally on your computer. It visually replays every move, translates notation into plain English, and offers Quick, Balanced, or Deep review. It provides no live-game moves or overlays.</p>
+          <p>The Chrome extension detects only a visible completed-game state, retrieves the published PGN, and runs Stockfish 18 Lite locally on your computer. Free does not offer an engine-version selector; Quick, Balanced, and Deep change depth within the same Lite engine. It provides no live-game moves or overlays.</p>
           <a class="add-chrome js-store-link" href="#" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">Add to Chrome ↗</a>
           <span id="store-note">Chrome Web Store link will activate after the listing is published.</span>
         </div>
@@ -102,7 +96,7 @@
       </section>
     </main>
 
-    <footer><a class="brand" href="#home"><span>R</span> Repertoire /64</a><p>Opening education and completed-game review. Not for live-game assistance.</p><nav class="footer-links"><a href="./privacy.html">Privacy</a><a href="https://discord.gg/RRT3jMGvCg" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">Discord support ↗</a><a href="https://docs.google.com/forms/d/e/1FAIpQLSdIKH8JLNTk0vL2k8OIpFuJzBn8XvbKlanTcReGq10v-xXERg/viewform?usp=publish-editor" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">Apply to join support ↗</a></nav></footer>
+    <footer><a class="brand" href="#home"><span>R</span> Repertoire /64</a><p>Opening education and completed-game review. Not for live-game assistance.</p><nav class="footer-links"><a href="./privacy.html">Privacy</a><a href="./terms.html">Purchase terms</a><a href="https://discord.gg/RRT3jMGvCg" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">Discord support ↗</a><a href="https://docs.google.com/forms/d/e/1FAIpQLSdIKH8JLNTk0vL2k8OIpFuJzBn8XvbKlanTcReGq10v-xXERg/viewform?usp=publish-editor" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">Apply to join support ↗</a></nav></footer>
     <script src="./site-config.js"></script>
     <script type="module" src="./app.js"></script>
   </body>

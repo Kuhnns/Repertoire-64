@@ -5,23 +5,27 @@ import { learningResourceUrl } from "../learning-resource.js";
 
 const formId = "1FAIpQLSdIKH8JLNTk0vL2k8OIpFuJzBn8XvbKlanTcReGq10v-xXERg";
 const discordInvite = "https://discord.gg/RRT3jMGvCg";
-const [index, privacy, openings, config] = await Promise.all([
+const [index, privacy, terms, openings, config] = await Promise.all([
   readFile(new URL("../index.html", import.meta.url), "utf8"),
   readFile(new URL("../privacy.html", import.meta.url), "utf8"),
+  readFile(new URL("../terms.html", import.meta.url), "utf8"),
   readFile(new URL("../data/openings.json", import.meta.url), "utf8").then(JSON.parse),
   readFile(new URL("../site-config.js", import.meta.url), "utf8"),
 ]);
 
-test("catalog contains 150 White and 150 Black courses with unique IDs", () => {
-  assert.equal(openings.length, 300);
-  assert.equal(openings.filter((course) => course.side === "White").length, 150);
-  assert.equal(openings.filter((course) => course.side === "Black").length, 150);
-  assert.equal(new Set(openings.map((course) => course.id)).size, 300);
+test("catalog contains only the 150 Free courses with unique IDs", () => {
+  assert.equal(openings.length, 150);
+  assert.equal(openings.filter((course) => course.side === "White").length, 75);
+  assert.equal(openings.filter((course) => course.side === "Black").length, 75);
+  assert.equal(new Set(openings.map((course) => course.id)).size, 150);
   for (const course of openings) {
+    assert.equal(course.tier, "free");
     assert.equal(typeof course.name, "string");
     assert.ok(course.name.trim());
     assert.ok(Array.isArray(course.mainline) && course.mainline.length >= 2);
-    assert.ok(Array.isArray(course.branches) && course.branches.length >= 1);
+    assert.equal(course.branches.length, 1);
+    assert.equal(Object.hasOwn(course, "advanced"), false);
+    assert.ok(course.mainline.every((step) => !Object.hasOwn(step, "advancedExplanation")));
   }
 });
 
@@ -46,14 +50,15 @@ test("all courses expose an exact-line HTTPS resource on allowlisted Lichess", (
   }
 });
 
-test("home and privacy pages expose the official support channels safely", () => {
-  for (const html of [index, privacy]) {
+test("home, privacy, and terms pages expose external links safely", () => {
+  for (const html of [index, privacy, terms]) {
     assert.ok(html.includes(discordInvite));
-    assert.ok(html.includes(formId));
     for (const tag of html.match(/<a\b[^>]*target="_blank"[^>]*>/g) || []) {
       assert.match(tag, /rel="[^"]*noopener[^"]*noreferrer[^"]*"/);
     }
   }
+  assert.ok(index.includes(formId));
+  assert.ok(privacy.includes(formId));
   assert.match(privacy, /wallet seed phrases/i);
   assert.match(privacy, /request deletion/i);
   assert.match(privacy, /selected bug-ticket channels or threads/i);
@@ -64,6 +69,10 @@ test("home and privacy pages expose the official support channels safely", () =>
   assert.match(privacy, /never merges, deploys, or publishes/i);
   assert.match(privacy, /purging 30 days after closure/i);
   assert.match(privacy, /cannot guarantee detection of every secret/i);
+  assert.match(privacy, /Only a signed, fully completed Plisio callback can activate Premium/i);
+  assert.match(privacy, /SHA-256 hash/i);
+  assert.match(terms, /\$10\.00 USD equivalent/i);
+  assert.match(index, /https:\/\/repertoire-64\.astral-kid-0584\.chatgpt\.site\/premium\/checkout/);
 });
 
 test("Google verification and the store allowlist remain configured", () => {
@@ -74,7 +83,7 @@ test("Google verification and the store allowlist remain configured", () => {
 });
 
 test("static pages load only packaged JavaScript", () => {
-  for (const html of [index, privacy]) {
+  for (const html of [index, privacy, terms]) {
     assert.doesNotMatch(html, /<script\b[^>]+src=["']https?:/i);
     for (const match of html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)) {
       assert.equal(match[2].trim(), "");
@@ -85,4 +94,14 @@ test("static pages load only packaged JavaScript", () => {
   assert.match(index, /SAFE EXTRA HELP · OFFICIAL LICHESS TOOL/);
   assert.match(index, /id="learning-resource-link"/);
   assert.match(index, /href="\.\/responsive-fixes\.css"/);
+});
+
+test("GitHub Pages contains no private payment implementation", () => {
+  const staticSource = [index, privacy, terms, config].join("\n");
+  assert.doesNotMatch(staticSource, /api\.plisio\.net/i);
+  assert.doesNotMatch(staticSource, /PLISIO_SECRET_KEY/i);
+  assert.doesNotMatch(staticSource, /\bverify_hash\b/i);
+  assert.doesNotMatch(staticSource, /\/api\/billing\/plisio\/status/i);
+  assert.doesNotMatch(staticSource, /\/api\/billing\/receipt/i);
+  assert.doesNotMatch(staticSource, /plisio\.net\/invoice\//i);
 });

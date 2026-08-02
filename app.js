@@ -10,7 +10,7 @@ const FILES = ["a", "b", "c", "d", "e", "f", "g", "h"];
 const STORAGE_KEY = "repertoire64-github-pages-progress";
 const USERNAME_PATTERN = /^[a-z0-9_-]{2,25}$/i;
 const COURSE_ID_PATTERN = /^[a-z0-9-]{3,64}$/;
-const MAX_PROGRESS_ITEMS = 300;
+const MAX_PROGRESS_ITEMS = 150;
 const MAX_COUNTER = 100000;
 const LICHESS_HOSTS = new Set(["lichess.org"]);
 const YOUTUBE_HOSTS = new Set(["youtube.com", "www.youtube.com", "m.youtube.com", "youtu.be", "www.youtube-nocookie.com"]);
@@ -230,7 +230,7 @@ async function loadCourses() {
     if (!isCourse(item) || !hasLegalMainline(item) || seen.has(item.id)) return false;
     seen.add(item.id);
     return true;
-  }).slice(0, 300);
+  }).slice(0, 150);
   if (!courses.length) throw new Error("Opening library contains no usable courses.");
 
   courseById = new Map(courses.map((item) => [item.id, item]));
@@ -281,22 +281,6 @@ function renderCatalog() {
   grid.replaceChildren(fragment);
 }
 
-function renderAdvancedStrategy() {
-  const advanced = course.advanced && typeof course.advanced === "object" ? course.advanced : {};
-  $("#advanced-goal").textContent = typeof advanced.strategicGoal === "string" ? advanced.strategicGoal : "Build a position whose plans you can explain.";
-  $("#advanced-plan").textContent = typeof advanced.middlegamePlan === "string" ? advanced.middlegamePlan : "Finish development, secure the king, and choose the correct pawn break.";
-  $("#advanced-risk").textContent = typeof advanced.moveOrderRisks === "string" ? advanced.moveOrderRisks : "Check every forcing move before following the memorized line.";
-  $("#advanced-evaluation").textContent = typeof advanced.evaluationNotes === "string" ? advanced.evaluationNotes : "Prefer positions you understand over tiny engine differences.";
-
-  const checklist = $("#advanced-checklist");
-  const items = Array.isArray(advanced.decisionChecklist) ? advanced.decisionChecklist.slice(0, 6) : [];
-  checklist.replaceChildren(...items.filter((item) => typeof item === "string").map((item) => {
-    const entry = document.createElement("li");
-    entry.textContent = item;
-    return entry;
-  }));
-}
-
 function chooseCourse(id, restore = true) {
   course = courseById.get(id) || courses[0];
   if (!course) return;
@@ -307,7 +291,6 @@ function chooseCourse(id, restore = true) {
   $("#course-why").textContent = course.whyLearn;
   $("#course-structure").textContent = course.structure;
   $("#course-plan").textContent = course.plan;
-  renderAdvancedStrategy();
 
   const resourceLink = $("#learning-resource-link");
   const resourceUrl = safeHttpsUrl(learningResourceUrl(course), LICHESS_HOSTS);
