@@ -72,7 +72,20 @@ test("home, privacy, and terms pages expose external links safely", () => {
   assert.match(privacy, /cannot guarantee detection of every secret/i);
   assert.match(privacy, /Only a signed, fully completed Plisio callback can activate Premium/i);
   assert.match(privacy, /SHA-256 hash/i);
-  assert.match(terms, /\$10\.00 USD equivalent/i);
+  for (const html of [index, privacy, terms]) {
+    assert.match(html, /\$1\.99(?: USD equivalent)?/i);
+    assert.match(html, /\$11\.99(?: USD equivalent)?/i);
+    assert.match(html, /Bitcoin \(BTC\)/i);
+    assert.match(html, /Ethereum \(ETH\)/i);
+    assert.match(html, /Litecoin \(LTC\)/i);
+    assert.match(html, /Bitcoin Cash \(BCH\)/i);
+    assert.match(html, /Solana \(SOL\)/i);
+    assert.match(html, /gift-card codes?[\s\S]*card details?[\s\S]*not accepted[\s\S]*Discord/i);
+  }
+  assert.match(index, /30 days \(manual renewal, no automatic renewal\)/i);
+  assert.match(terms, /30 days[\s\S]*no automatic renewal[\s\S]*renewing while it is active adds 30 days after the current expiry/i);
+  assert.match(privacy, /verified email from Discord sign-in/i);
+  assert.doesNotMatch([index, privacy, terms, config].join("\n"), /\$10(?:\.00)?|Sign in with ChatGPT/i);
   assert.equal(index.split(premiumCheckout).length - 1, 2);
   assert.doesNotMatch([index, privacy, terms, config].join("\n"), /repertoire-64\.astral-kid-0584\.chatgpt\.site/i);
 });

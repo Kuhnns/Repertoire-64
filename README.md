@@ -14,9 +14,11 @@ This static edition includes:
 - Direct read-only Chess.com PubAPI rating lookup.
 - The extension privacy policy.
 
-Optional ChatGPT account sync is available only on the hosted Repertoire /64 application because GitHub Pages cannot run the required server and database.
+Optional account sync is available only after Discord sign-in on the standalone Repertoire /64 application because GitHub Pages cannot run the required server and database.
 
-The static package physically contains only Free tutorial content. Its Premium links open the authenticated hosted checkout, where a one-time $10 USD-equivalent Plisio payment can unlock all 300 courses and the deeper explanation layer. GitHub Pages contains no API secret, payment callback, private receipt, or entitlement logic.
+The static package physically contains only Free tutorial content. Its Premium links open the authenticated standalone Plisio checkout, where users can choose $1.99 USD equivalent for 30 days (manual renewal with no automatic renewal) or $11.99 USD equivalent for lifetime access. The accepted cryptocurrencies are Bitcoin (BTC), Ethereum (ETH), Litecoin (LTC), Bitcoin Cash (BCH), and Solana (SOL). GitHub Pages contains no API secret, payment callback, private receipt, or entitlement logic.
+
+Gift-card codes and card details are not accepted through Discord. Never post or send them in support tickets or messages.
 
 ## Community
 
