@@ -5,6 +5,7 @@ import { learningResourceUrl } from "../learning-resource.js";
 
 const formId = "1FAIpQLSdIKH8JLNTk0vL2k8OIpFuJzBn8XvbKlanTcReGq10v-xXERg";
 const discordInvite = "https://discord.gg/RRT3jMGvCg";
+const premiumCheckout = "https://repertoire64-backend.repertoire-64-backend.workers.dev/premium/checkout";
 const [index, privacy, terms, openings, config] = await Promise.all([
   readFile(new URL("../index.html", import.meta.url), "utf8"),
   readFile(new URL("../privacy.html", import.meta.url), "utf8"),
@@ -72,7 +73,8 @@ test("home, privacy, and terms pages expose external links safely", () => {
   assert.match(privacy, /Only a signed, fully completed Plisio callback can activate Premium/i);
   assert.match(privacy, /SHA-256 hash/i);
   assert.match(terms, /\$10\.00 USD equivalent/i);
-  assert.match(index, /https:\/\/repertoire-64\.astral-kid-0584\.chatgpt\.site\/premium\/checkout/);
+  assert.equal(index.split(premiumCheckout).length - 1, 2);
+  assert.doesNotMatch([index, privacy, terms, config].join("\n"), /repertoire-64\.astral-kid-0584\.chatgpt\.site/i);
 });
 
 test("Google verification and the store allowlist remain configured", () => {

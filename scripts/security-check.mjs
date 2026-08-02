@@ -17,7 +17,7 @@ const allowedHosts = new Set([
   "kuhnns.github.io",
   "lichess.org",
   "m.youtube.com",
-  "repertoire-64.astral-kid-0584.chatgpt.site",
+  "repertoire64-backend.repertoire-64-backend.workers.dev",
   "www.chess.com",
   "www.youtube.com",
   "www.youtube-nocookie.com",
