@@ -72,7 +72,9 @@ test("home, privacy, and terms pages expose external links safely", () => {
   assert.match(privacy, /purging 30 days after closure/i);
   assert.match(privacy, /cannot guarantee detection of every secret/i);
   assert.match(privacy, /Only a signed, fully completed Plisio callback can activate Premium/i);
-  assert.match(privacy, /SHA-256 hash/i);
+  assert.match(privacy, /signed-in customer may later reopen only payment records owned by the same opaque account/i);
+  assert.match(privacy, /order ID and checkout email[\s\S]*references, not authentication or proof of payment/i);
+  assert.doesNotMatch(privacy, /one-time payment receipt|secure HttpOnly browser token/i);
   for (const html of [index, privacy, terms]) {
     assert.match(html, /\$1\.99(?: USD equivalent)?/i);
     assert.match(html, /\$11\.99(?: USD equivalent)?/i);
