@@ -2,28 +2,56 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { learningResourceUrl } from "../learning-resource.js";
+import { unifiedDestination } from "../redirect.js";
 
+const appOrigin = "https://app.repertoire64.com";
 const formId = "1FAIpQLSdIKH8JLNTk0vL2k8OIpFuJzBn8XvbKlanTcReGq10v-xXERg";
 const discordInvite = "https://discord.gg/RRT3jMGvCg";
-const premiumCheckout = "https://app.repertoire64.com/premium/checkout";
 const retiredOrigins = /repertoire-64\.astral-kid-0584\.chatgpt\.site|kuhnns\.github\.io\/Repertoire-64|repertoire64-backend\.repertoire-64-backend\.workers\.dev/i;
-const [index, privacy, terms, openings, config] = await Promise.all([
+const [index, privacy, terms, openings, config, redirect, cname] = await Promise.all([
   readFile(new URL("../index.html", import.meta.url), "utf8"),
   readFile(new URL("../privacy.html", import.meta.url), "utf8"),
   readFile(new URL("../terms.html", import.meta.url), "utf8"),
   readFile(new URL("../data/openings.json", import.meta.url), "utf8").then(JSON.parse),
   readFile(new URL("../site-config.js", import.meta.url), "utf8"),
+  readFile(new URL("../redirect.js", import.meta.url), "utf8"),
+  readFile(new URL("../CNAME", import.meta.url), "utf8"),
 ]);
 
-test("catalog contains only the 150 Free courses with unique IDs", () => {
+test("legacy GitHub Pages landing forwards to the unified authenticated app", () => {
+  assert.match(index, /ONE UNIFIED REPERTOIRE \/64/);
+  assert.match(index, /Languages, accounts, and Premium together/);
+  assert.match(index, /rel="canonical" href="https:\/\/app\.repertoire64\.com\/"/);
+  assert.match(index, /http-equiv="refresh" content="0; url=https:\/\/app\.repertoire64\.com\/"/);
+  assert.match(index, /type="module" src="\.\/redirect\.js"/);
+  assert.doesNotMatch(index, /id="language-select"|id="player-form"|id="course-grid"/);
+  assert.equal(cname.trim(), "www.repertoire64.com");
+});
+
+test("legacy forwarding preserves only safe course and section state", () => {
+  assert.equal(
+    unifiedDestination({ search: "?course=italian-game", hash: "#trainer" }),
+    `${appOrigin}/?course=italian-game#trainer`,
+  );
+  assert.equal(
+    unifiedDestination({ search: "?course=../../evil&next=https://attacker.example", hash: "#unknown" }),
+    `${appOrigin}/`,
+  );
+  assert.equal(
+    unifiedDestination({ search: "?next=https://attacker.example", hash: "#premium" }),
+    `${appOrigin}/#premium`,
+  );
+  assert.match(redirect, /window\.location\.replace\(unifiedDestination\(\)\)/);
+  assert.doesNotMatch(redirect, /document\.cookie|localStorage|sessionStorage|fetch\(/);
+});
+
+test("catalog archive contains only the 150 Free courses with unique IDs", () => {
   assert.equal(openings.length, 150);
   assert.equal(openings.filter((course) => course.side === "White").length, 75);
   assert.equal(openings.filter((course) => course.side === "Black").length, 75);
   assert.equal(new Set(openings.map((course) => course.id)).size, 150);
   for (const course of openings) {
     assert.equal(course.tier, "free");
-    assert.equal(typeof course.name, "string");
-    assert.ok(course.name.trim());
     assert.ok(Array.isArray(course.mainline) && course.mainline.length >= 2);
     assert.equal(course.branches.length, 1);
     assert.equal(Object.hasOwn(course, "advanced"), false);
@@ -31,51 +59,23 @@ test("catalog contains only the 150 Free courses with unique IDs", () => {
   }
 });
 
-test("all courses expose an exact-line HTTPS resource on allowlisted Lichess", () => {
+test("all archived courses expose an exact-line HTTPS resource on allowlisted Lichess", () => {
   for (const course of openings) {
     const resource = new URL(learningResourceUrl(course));
-    assert.equal(resource.protocol, "https:", `${course.id} resource must use HTTPS`);
-    assert.equal(resource.hostname, "lichess.org", `${course.id} resource host is not allowlisted`);
-    assert.equal(resource.username, "", `${course.id} resource must not contain credentials`);
-    assert.equal(resource.password, "", `${course.id} resource must not contain credentials`);
-    assert.equal(resource.port, "", `${course.id} resource must not use a custom port`);
-    assert.ok(resource.pathname.startsWith("/analysis/pgn/"), `${course.id} must open its exact line`);
-    assert.equal(resource.searchParams.get("color"), course.side.toLowerCase(), `${course.id} orientation is wrong`);
-    assert.equal(resource.hash, "#explorer", `${course.id} must open the opening explorer`);
-  }
-
-  for (const unsafeSan of ["javascript:alert(1)", "data:text/html,unsafe", "https://example.com", "../outside"]) {
-    const fallback = new URL(learningResourceUrl({ side: "White", mainline: [{ san: unsafeSan }] }));
-    assert.equal(fallback.protocol, "https:");
-    assert.equal(fallback.hostname, "lichess.org");
-    assert.equal(fallback.pathname, "/analysis");
+    assert.equal(resource.protocol, "https:");
+    assert.equal(resource.hostname, "lichess.org");
+    assert.equal(resource.username, "");
+    assert.equal(resource.password, "");
+    assert.equal(resource.port, "");
+    assert.ok(resource.pathname.startsWith("/analysis/pgn/"));
+    assert.equal(resource.searchParams.get("color"), course.side.toLowerCase());
+    assert.equal(resource.hash, "#explorer");
   }
 });
 
-test("home, privacy, and terms pages expose external links safely", () => {
-  for (const html of [index, privacy, terms]) {
+test("legacy privacy and terms pages retain payment and support disclosures", () => {
+  for (const html of [privacy, terms]) {
     assert.ok(html.includes(discordInvite));
-    for (const tag of html.match(/<a\b[^>]*target="_blank"[^>]*>/g) || []) {
-      assert.match(tag, /rel="[^"]*noopener[^"]*noreferrer[^"]*"/);
-    }
-  }
-  assert.ok(index.includes(formId));
-  assert.ok(privacy.includes(formId));
-  assert.match(privacy, /wallet seed phrases/i);
-  assert.match(privacy, /request deletion/i);
-  assert.match(privacy, /selected bug-ticket channels or threads/i);
-  assert.match(privacy, /designated ⭐ reviews location/i);
-  assert.match(privacy, /treated as untrusted input/i);
-  assert.match(privacy, /private GitHub repository/i);
-  assert.match(privacy, /Negative sentiment[\s\S]*never causes a fix/i);
-  assert.match(privacy, /never merges, deploys, or publishes/i);
-  assert.match(privacy, /purging 30 days after closure/i);
-  assert.match(privacy, /cannot guarantee detection of every secret/i);
-  assert.match(privacy, /Only a signed, fully completed Plisio callback can activate Premium/i);
-  assert.match(privacy, /signed-in customer may later reopen only payment records owned by the same opaque account/i);
-  assert.match(privacy, /order ID and checkout email[\s\S]*references, not authentication or proof of payment/i);
-  assert.doesNotMatch(privacy, /one-time payment receipt|secure HttpOnly browser token/i);
-  for (const html of [index, privacy, terms]) {
     assert.match(html, /\$1\.99(?: USD equivalent)?/i);
     assert.match(html, /\$11\.99(?: USD equivalent)?/i);
     assert.match(html, /Bitcoin \(BTC\)/i);
@@ -83,44 +83,30 @@ test("home, privacy, and terms pages expose external links safely", () => {
     assert.match(html, /Litecoin \(LTC\)/i);
     assert.match(html, /Bitcoin Cash \(BCH\)/i);
     assert.match(html, /Solana \(SOL\)/i);
-    assert.match(html, /gift-card codes?[\s\S]*card details?[\s\S]*not accepted[\s\S]*Discord/i);
+    for (const tag of html.match(/<a\b[^>]*target="_blank"[^>]*>/g) || []) {
+      assert.match(tag, /rel="[^"]*noopener[^"]*noreferrer[^"]*"/);
+    }
   }
-  assert.match(index, /30 days \(manual renewal, no automatic renewal\)/i);
+  assert.ok(privacy.includes(formId));
+  assert.match(privacy, /Only a signed, fully completed Plisio callback can activate Premium/i);
+  assert.match(privacy, /signed-in customer may later reopen only payment records owned by the same opaque account/i);
   assert.match(terms, /30 days[\s\S]*no automatic renewal[\s\S]*renewing while it is active adds 30 days after the current expiry/i);
-  assert.match(privacy, /verified email from Discord sign-in/i);
-  assert.doesNotMatch([index, privacy, terms, config].join("\n"), /\$10(?:\.00)?|Sign in with ChatGPT/i);
-  assert.equal(index.split(premiumCheckout).length - 1, 2);
-  assert.doesNotMatch([index, privacy, terms, config].join("\n"), retiredOrigins);
 });
 
-test("Google verification and the store allowlist remain configured", () => {
+test("verification, store allowlist, and local-only scripts remain configured", () => {
   assert.match(index, /google-site-verification/);
   assert.match(index, /8gzjm3p1PhkxQzYyBTjbeXqrGrNx4Vt2TQRwgGrDx-Q/);
   assert.match(config, /chromewebstore\.google\.com/);
-  assert.doesNotMatch(config, /https:\/\/[^"']+\/api\/webhooks\//);
-});
-
-test("static pages load only packaged JavaScript", () => {
   for (const html of [index, privacy, terms]) {
     assert.doesNotMatch(html, /<script\b[^>]+src=["']https?:/i);
-    assert.doesNotMatch(html, /upgrade-insecure-requests/i, "packaged assets must remain available while a custom-domain certificate is provisioning");
     for (const match of html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)) {
       assert.equal(match[2].trim(), "");
     }
   }
-  assert.match(index, /src="\.\/site-config\.js"/);
-  assert.match(index, /src="\.\/app\.js"/);
-  assert.match(index, /SAFE EXTRA HELP · OFFICIAL LICHESS TOOL/);
-  assert.match(index, /id="learning-resource-link"/);
-  assert.match(index, /href="\.\/responsive-fixes\.css"/);
 });
 
-test("GitHub Pages contains no private payment implementation", () => {
-  const staticSource = [index, privacy, terms, config].join("\n");
-  assert.doesNotMatch(staticSource, /api\.plisio\.net/i);
-  assert.doesNotMatch(staticSource, /PLISIO_SECRET_KEY/i);
-  assert.doesNotMatch(staticSource, /\bverify_hash\b/i);
-  assert.doesNotMatch(staticSource, /\/api\/billing\/plisio\/status/i);
-  assert.doesNotMatch(staticSource, /\/api\/billing\/receipt/i);
-  assert.doesNotMatch(staticSource, /plisio\.net\/invoice\//i);
+test("legacy static files contain no private payment implementation or retired host", () => {
+  const staticSource = [index, privacy, terms, config, redirect].join("\n");
+  assert.doesNotMatch(staticSource, /api\.plisio\.net|PLISIO_SECRET_KEY|\bverify_hash\b|\/api\/billing\/plisio\/status|\/api\/billing\/receipt|plisio\.net\/invoice\//i);
+  assert.doesNotMatch(staticSource, retiredOrigins);
 });

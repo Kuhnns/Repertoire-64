@@ -2,103 +2,28 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; connect-src 'self' https://api.chess.com; font-src 'self'; form-action 'self'; frame-src 'none'; img-src 'self' data:; manifest-src 'self'; media-src 'none'; object-src 'none'; script-src 'self'; style-src 'self'; worker-src 'none'; require-trusted-types-for 'script'; trusted-types 'none'; upgrade-insecure-requests">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; connect-src 'none'; font-src 'self'; form-action 'none'; frame-ancestors 'none'; frame-src 'none'; img-src 'self' data:; object-src 'none'; script-src 'self'; style-src 'self'">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="referrer" content="no-referrer">
     <meta name="google-site-verification" content="8gzjm3p1PhkxQzYyBTjbeXqrGrNx4Vt2TQRwgGrDx-Q">
-    <meta name="description" content="Learn 150 chess openings free from move one, then continue with 150 Premium courses on the authenticated website.">
+    <meta name="description" content="Repertoire /64 now has one unified multilingual website with accounts, Premium, opening training, and completed-game review.">
+    <meta name="robots" content="noindex, follow">
     <meta name="theme-color" content="#214c3a">
-    <title>Repertoire /64 — Chess Opening Coach</title>
+    <title>Opening Repertoire /64…</title>
+    <link rel="canonical" href="https://app.repertoire64.com/">
     <link rel="icon" href="./favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="./styles.css">
-    <link rel="stylesheet" href="./responsive-fixes.css">
+    <script type="module" src="./redirect.js"></script>
+    <meta http-equiv="refresh" content="0; url=https://app.repertoire64.com/">
   </head>
   <body>
-    <header class="topbar">
-      <a class="brand" href="#home"><span>R</span> Repertoire /64</a>
-      <nav><a href="#catalog" data-i18n="navCourses">Courses</a><a href="#premium" data-i18n="navPlans">Free vs Premium</a><a href="#trainer" data-i18n="navTrainer">Interactive trainer</a><a href="#extension" data-i18n="navExtension">Chrome extension</a><a href="https://discord.gg/RRT3jMGvCg" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">Support</a><a href="https://docs.google.com/forms/d/e/1FAIpQLSdIKH8JLNTk0vL2k8OIpFuJzBn8XvbKlanTcReGq10v-xXERg/viewform?usp=publish-editor" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">Apply to join support ↗</a></nav>
-      <div class="topbar-tools"><label class="language-picker"><span data-i18n="language">Language</span><select id="language-select" aria-label="Language"></select></label><a class="store-link js-store-link" href="#" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">Chrome Web Store ↗</a></div>
-    </header>
-
     <main id="home">
       <section class="hero">
-        <p class="eyebrow">BEGINNER-FIRST OPENING SCHOOL · STATIC GITHUB PAGES EDITION</p>
-        <h1><span data-i18n="heroTitle1">Stop memorizing moves.</span><br><em data-i18n="heroTitle2">Understand the position.</em></h1>
-        <p class="hero-copy" data-i18n="heroCopy">Free includes 150 opening courses, realistic move training, and private completed-game analysis with Stockfish 18 Lite. Premium expands the library to all 300 courses and adds deeper explanations.</p>
-        <p class="language-note" data-i18n="interfaceNote">Interface translated; opening names, chess notation, and lesson text stay in their original chess-standard form.</p>
-        <form id="player-form" class="lookup">
-          <div><label for="username" data-i18n="username">Chess.com username</label><input id="username" autocomplete="off" autocapitalize="none" maxlength="25" minlength="2" pattern="[A-Za-z0-9_-]{2,25}" spellcheck="false" placeholder="e.g. hikaru"></div>
-          <button type="submit" data-i18n="analyze">Analyze my Elo →</button>
-        </form>
-        <p id="player-status" class="status" aria-live="polite"></p>
-        <div id="player-report" class="report" hidden></div>
-        <div class="hero-stats"><div><strong>75</strong><span data-i18n="freeWhite">free White courses</span></div><div><strong>75</strong><span data-i18n="freeBlack">free Black courses</span></div><div><strong>+150</strong><span data-i18n="premiumCourses">courses in Premium</span></div></div>
-      </section>
-
-      <section id="premium" class="premium-section">
-        <div><p>FREE VS PREMIUM</p><h2>Start with the essentials.<br><em>Unlock the complete school.</em></h2><p>GitHub Pages is the Free edition and physically contains only the 150 Free tutorials. Premium lessons are delivered only by the authenticated website.</p></div>
-        <div class="premium-cards">
-          <article><small>FREE</small><h3>150 courses</h3><p>Core plans, legal main lines, one opponent scenario, Stockfish 18 Lite reviews, and local progress.</p></article>
-          <article class="featured"><small>PREMIUM · $10 ONE TIME</small><h3>300 courses</h3><p>All openings, deeper explanations for every move, all reply scenarios, move-order risks, evaluation notes, and longer Elo analysis. Sign in with a working email before the secure Plisio checkout.</p><a href="https://app.repertoire64.com/premium/checkout" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">Continue to secure checkout ↗</a></article>
-        </div>
-      </section>
-
-      <section id="catalog" class="section">
-        <div class="section-heading"><div><p data-i18n="library">THE FULL LIBRARY</p><h2 data-i18n="libraryTitle">300 courses · 150 included free</h2></div><p>Every Free course starts from the normal initial position and includes a legal main line, clear move explanations, a practical plan, a common error, and one opponent-response scenario.</p></div>
-        <div class="catalog-tools">
-          <div id="filters" class="filters"><button class="active" data-side="All" data-i18n="all">All</button><button data-side="White" data-i18n="white">White</button><button data-side="Black" data-i18n="black">Black</button></div>
-          <input id="search" type="search" maxlength="80" placeholder="Search openings or ideas…" data-i18n-placeholder="search" aria-label="Search opening courses">
-        </div>
-        <div id="course-grid" class="course-grid"></div>
-      </section>
-
-      <section id="trainer" class="trainer-section">
-        <div class="trainer-title"><div><p data-i18n="startingZero">STARTING FROM ZERO</p><h2 id="course-name">Loading opening…</h2></div><span id="save-status" aria-live="polite" data-i18n="progressLocal">Saved on this computer</span></div>
-        <div class="foundation">
-          <article><small data-i18n="idea">THE IDEA</small><h3 id="course-idea"></h3><p id="course-why"></p></article>
-          <article><small data-i18n="structure">PAWN STRUCTURE</small><h3 id="course-structure"></h3><p>Use the pawn structure to decide which files, diagonals, and breaks matter.</p></article>
-          <article><small data-i18n="plan">YOUR PLAN</small><h3 id="course-plan"></h3><p>Answer the threat, check king safety, then improve your least-active piece.</p></article>
-        </div>
-        <aside class="advanced-teaser"><strong>Premium explanation layer</strong><span>Premium adds move-by-move deeper reasoning, move-order risks, evaluation notes, two more opponent scenarios, and a decision checklist.</span><a href="https://app.repertoire64.com/premium/checkout" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">Open secure checkout ↗</a></aside>
-        <div class="trainer">
-          <div class="board-wrap"><div id="board" class="board" aria-label="Interactive chess board"></div></div>
-          <div class="lesson">
-            <div class="lesson-progress"><span id="progress-label">0 / 0</span><progress id="progress-bar" max="100" value="0" aria-label="Current lesson progress"></progress></div>
-            <p id="turn-label" class="turn-label" data-i18n="yourMove">YOUR MOVE</p>
-            <h3 id="lesson-title">Find the right move on the board.</h3>
-            <p id="lesson-copy" class="lesson-copy">Select the piece, then its destination.</p>
-            <button id="opponent-move" class="primary" hidden>Play opponent move</button>
-            <div id="hint" class="hint"></div>
-            <div class="controls"><button id="back" data-i18n="back">← Back</button><button id="restart" data-i18n="restart">Restart line</button></div>
-            <div id="move-list" class="move-list"></div>
-          </div>
-        </div>
-        <aside class="learning-resource" aria-labelledby="learning-resource-heading">
-          <div><small data-i18n="safeHelp">SAFE EXTRA HELP · OFFICIAL LICHESS TOOL</small><h3 id="learning-resource-heading">Step through this exact line on Lichess</h3><p>If an explanation is unclear, replay the same legal move sequence on Lichess's analysis board and compare common continuations. Use analysis only for study after games, never during live play.</p></div>
-          <a id="learning-resource-link" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">Explore this course on Lichess ↗</a>
-        </aside>
-        <div class="branches"><div class="branch-head"><div><p>WHEN THE OPPONENT CHANGES COURSE</p><h3>One common reply to remember</h3></div><a id="video-link" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">Reputable-channel video search ↗</a></div><div id="branch-grid" class="branch-grid compact"></div></div>
-      </section>
-
-      <section id="extension" class="extension">
-        <div>
-          <p>CHROME COMPANION</p>
-          <h2 data-i18n="extensionTitle">Every finished game becomes a lesson.</h2>
-          <p>The Chrome extension detects only a visible completed-game state, retrieves the published PGN, and runs Stockfish 18 Lite locally on your computer. Free does not offer an engine-version selector; Quick, Balanced, and Deep change depth within the same Lite engine. It provides no live-game moves or overlays.</p>
-          <a class="add-chrome js-store-link" href="#" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer" data-i18n="download">Download Chrome extension (.zip) ↓</a>
-          <span id="store-note">Chrome Web Store link will activate after the listing is published.</span>
-        </div>
-        <aside><small>POST-GAME REVIEW</small><h3>Move 11 · Inaccuracy</h3><p>You released the center before finishing development.</p><div><span>YOU PLAYED</span><strong>11. dxe5?!</strong></div><div class="better"><span>BETTER</span><strong>11. O-O</strong></div></aside>
-      </section>
-
-      <section id="privacy-controls" class="privacy-strip">
-        <div><strong>Local-first privacy</strong><p>The static website saves course progress in this browser. Your Chess.com username is used for the lookup but is not saved by this website.</p><p id="clear-progress-status" class="clear-status" aria-live="polite"></p></div>
-        <div class="privacy-actions"><button id="clear-progress" type="button">Clear local progress</button><a href="./privacy.html" data-i18n="privacy">Privacy</a></div>
+        <p class="eyebrow">ONE UNIFIED REPERTOIRE /64</p>
+        <h1>Opening your chess coach.<br><em>Languages, accounts, and Premium together.</em></h1>
+        <p class="hero-copy">The former GitHub Pages edition has been merged into the authenticated Repertoire /64 app.</p>
+        <p><a class="add-chrome" href="https://app.repertoire64.com/">Open Repertoire /64 →</a></p>
       </section>
     </main>
-
-    <footer><a class="brand" href="#home"><span>R</span> Repertoire /64</a><p>Opening education and completed-game review. Not for live-game assistance.</p><nav class="footer-links"><a href="./privacy.html">Privacy</a><a href="./terms.html">Purchase terms</a><a href="https://discord.gg/RRT3jMGvCg" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">Discord support ↗</a><a href="https://docs.google.com/forms/d/e/1FAIpQLSdIKH8JLNTk0vL2k8OIpFuJzBn8XvbKlanTcReGq10v-xXERg/viewform?usp=publish-editor" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">Apply to join support ↗</a></nav></footer>
-    <script src="./site-config.js"></script>
-    <script type="module" src="./app.js"></script>
   </body>
 </html>
