@@ -1,5 +1,9 @@
 import { Chess } from "./vendor/chess.js";
 import { learningResourceUrl } from "./learning-resource.js";
+import { initializeLocalization } from "./i18n.js";
+
+const localization = initializeLocalization();
+const tr = (key) => localization.translate(key);
 
 const PIECES = {
   wp: "♙", wn: "♘", wb: "♗", wr: "♖", wq: "♕", wk: "♔",
@@ -74,7 +78,7 @@ function readProgress() {
 function persistProgress() {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
-    $("#save-status").textContent = "Saved on this computer";
+    $("#save-status").textContent = tr("progressLocal");
     return true;
   } catch {
     $("#save-status").textContent = "Could not save in this browser";
@@ -258,7 +262,7 @@ function renderCatalog() {
 
     const side = document.createElement("span");
     side.className = `side ${item.side.toLowerCase()}`;
-    side.textContent = `${item.side}${item.side === "Black" ? ` vs ${item.responseTo}` : ""}`;
+    side.textContent = `${item.side === "White" ? tr("white") : tr("black")}${item.side === "Black" ? ` vs ${item.responseTo}` : ""}`;
     const title = document.createElement("h3");
     title.textContent = item.name;
     const idea = document.createElement("p");
@@ -386,7 +390,7 @@ function renderTrainer(message) {
   $("#progress-label").textContent = `${ply} / ${course.mainline.length} half-moves`;
   $("#progress-bar").value = Math.round((ply / course.mainline.length) * 100);
   $("#lesson-copy").textContent = message;
-  $("#turn-label").textContent = step ? `${step.role === "player" ? "YOUR MOVE" : "OPPONENT RESPONSE"} · MOVE ${Math.floor(step.ply / 2) + 1}` : "MAIN LINE COMPLETE";
+  $("#turn-label").textContent = step ? `${step.role === "player" ? tr("yourMove") : tr("opponentResponse")} · MOVE ${Math.floor(step.ply / 2) + 1}` : "MAIN LINE COMPLETE";
   $("#lesson-title").textContent = !step ? "Main line complete." : step.role === "player" ? "Find the right move on the board." : `The opponent chooses ${step.san}.`;
   $("#opponent-move").hidden = !step || step.role !== "opponent";
   if (step?.role === "opponent") $("#opponent-move").textContent = `Play ${step.san} and explain why →`;
@@ -424,7 +428,7 @@ function renderTrainer(message) {
     title.textContent = typeof branch.opponentMove === "string" ? branch.opponentMove : "Alternative move";
     const button = document.createElement("button");
     button.type = "button";
-    button.textContent = "Find the reply";
+    button.textContent = tr("findReply");
     const answer = document.createElement("p");
     answer.hidden = true;
     const answerMove = document.createElement("strong");
@@ -509,6 +513,7 @@ $("#player-form").addEventListener("submit", async (event) => {
   }
 
   submitButton.disabled = true;
+  submitButton.textContent = tr("reading");
   $("#player-status").textContent = "Reading public Chess.com ratings…";
   $("#player-report").hidden = true;
   try {
@@ -549,7 +554,13 @@ $("#player-form").addEventListener("submit", async (event) => {
     $("#player-status").textContent = error instanceof Error ? error.message : "Chess.com is temporarily unavailable.";
   } finally {
     submitButton.disabled = false;
+    submitButton.textContent = tr("analyze");
   }
+});
+
+document.addEventListener("repertoire64:locale", () => {
+  if (courses.length) renderCatalog();
+  if (course) renderTrainer($("#lesson-copy").textContent || "");
 });
 
 configureStoreLinks();
