@@ -37,5 +37,5 @@ jobs:
       - name: Run static security checks
         run: node scripts/security-check.mjs
 
-      - name: Verify Chrome extension archives
-        run: unzip -t repertoire64-chrome-web-store-1.0.0.zip && unzip -t repertoire64-chrome-web-store-1.4.0.zip
+      - name: Verify current Chrome extension archive
+        run: node scripts/check-extension-archive.mjs repertoire64-chrome-web-store-1.5.1.zip

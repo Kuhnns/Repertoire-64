@@ -14,10 +14,9 @@ const allowedHosts = new Set([
   "discord.gg",
   "docs.google.com",
   "github.com",
-  "kuhnns.github.io",
   "lichess.org",
   "m.youtube.com",
-  "repertoire64-backend.repertoire-64-backend.workers.dev",
+  "app.repertoire64.com",
   "www.chess.com",
   "www.youtube.com",
   "www.youtube-nocookie.com",
@@ -48,6 +47,12 @@ const findings = [];
 let scannedSources = 0;
 let scannedTextFiles = 0;
 let externalReferences = 0;
+
+const retiredOriginRules = [
+  /repertoire-64\.astral-kid-0584\.chatgpt\.site/gi,
+  /kuhnns\.github\.io\/Repertoire-64/gi,
+  /repertoire64-backend\.repertoire-64-backend\.workers\.dev/gi,
+];
 
 function normalized(value) {
   return value.split(sep).join("/");
@@ -157,6 +162,13 @@ async function main() {
     if (!textExtensions.has(extension) || fileStat.size > 6 * 1024 * 1024) continue;
     const source = await readFile(join(root, file), "utf8");
     scannedTextFiles += 1;
+    if (file !== "scripts/security-check.mjs" && !file.startsWith("tests/")) {
+      for (const pattern of retiredOriginRules) {
+        for (const match of source.matchAll(new RegExp(pattern.source, pattern.flags))) {
+          finding(file, source, match.index, "retired-origin", "retired deployment origin must not be referenced");
+        }
+      }
+    }
     if (authoredExtensions.has(extension) && file !== "scripts/security-check.mjs" && !file.startsWith("tests/")) scanSource(file, source);
     for (const [provider, pattern] of webhookRules) {
       for (const match of source.matchAll(new RegExp(pattern.source, pattern.flags))) finding(file, source, match.index, "webhook-secret", `${provider} webhook credential appears committed; remove and rotate it`);

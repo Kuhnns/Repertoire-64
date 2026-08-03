@@ -5,7 +5,8 @@ import { learningResourceUrl } from "../learning-resource.js";
 
 const formId = "1FAIpQLSdIKH8JLNTk0vL2k8OIpFuJzBn8XvbKlanTcReGq10v-xXERg";
 const discordInvite = "https://discord.gg/RRT3jMGvCg";
-const premiumCheckout = "https://repertoire64-backend.repertoire-64-backend.workers.dev/premium/checkout";
+const premiumCheckout = "https://app.repertoire64.com/premium/checkout";
+const retiredOrigins = /repertoire-64\.astral-kid-0584\.chatgpt\.site|kuhnns\.github\.io\/Repertoire-64|repertoire64-backend\.repertoire-64-backend\.workers\.dev/i;
 const [index, privacy, terms, openings, config] = await Promise.all([
   readFile(new URL("../index.html", import.meta.url), "utf8"),
   readFile(new URL("../privacy.html", import.meta.url), "utf8"),
@@ -87,7 +88,7 @@ test("home, privacy, and terms pages expose external links safely", () => {
   assert.match(privacy, /verified email from Discord sign-in/i);
   assert.doesNotMatch([index, privacy, terms, config].join("\n"), /\$10(?:\.00)?|Sign in with ChatGPT/i);
   assert.equal(index.split(premiumCheckout).length - 1, 2);
-  assert.doesNotMatch([index, privacy, terms, config].join("\n"), /repertoire-64\.astral-kid-0584\.chatgpt\.site/i);
+  assert.doesNotMatch([index, privacy, terms, config].join("\n"), retiredOrigins);
 });
 
 test("Google verification and the store allowlist remain configured", () => {
