@@ -100,6 +100,7 @@ test("Google verification and the store allowlist remain configured", () => {
 test("static pages load only packaged JavaScript", () => {
   for (const html of [index, privacy, terms]) {
     assert.doesNotMatch(html, /<script\b[^>]+src=["']https?:/i);
+    assert.doesNotMatch(html, /upgrade-insecure-requests/i, "packaged assets must remain available while a custom-domain certificate is provisioning");
     for (const match of html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)) {
       assert.equal(match[2].trim(), "");
     }

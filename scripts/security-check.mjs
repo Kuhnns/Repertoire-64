@@ -133,7 +133,7 @@ function validateCsp(file, source) {
     findings.push(`${file}:1 [csp] a Content-Security-Policy meta tag is required`);
     return;
   }
-  const required = ["default-src 'none'", "base-uri 'none'", "object-src 'none'", "frame-src 'none'", "script-src 'self'", "upgrade-insecure-requests"];
+  const required = ["default-src 'none'", "base-uri 'none'", "object-src 'none'", "frame-src 'none'", "script-src 'self'"];
   for (const directive of required) if (!content.includes(directive)) findings.push(`${file}:1 [csp] missing ${directive}`);
   if (/unsafe-inline|unsafe-eval|\bhttps?:/i.test(content.replace(/connect-src[^;]*/i, ""))) findings.push(`${file}:1 [csp] executable or render sources are too broad`);
 }
